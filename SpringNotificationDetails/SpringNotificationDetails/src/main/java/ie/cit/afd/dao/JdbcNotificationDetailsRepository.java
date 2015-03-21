@@ -1,6 +1,7 @@
 package ie.cit.afd.dao;
 
 import ie.cit.afd.notification.models.NotificationDetails;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -19,7 +20,14 @@ public class JdbcNotificationDetailsRepository implements NotificationDetailsRep
 		jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 	public void insert(NotificationDetails notificationDetails) {
-		// TODO Auto-generated method stub
+		jdbcTemplate.update("insert into "
+				+ "notificationdetails("
+				+ "notificationdetailsid,notificationtypeid,details,status) "
+				+ "values (?,?,?,?)",
+				notificationDetails.getNotificationDetailsID(),
+				notificationDetails.getNotificationTypeID(),
+				notificationDetails.getDetails(),
+				notificationDetails.isStatus());
 		
 	}
 	public void update(NotificationDetails notificationDetails) {
@@ -31,8 +39,11 @@ public class JdbcNotificationDetailsRepository implements NotificationDetailsRep
 		
 	}
 	public List<NotificationDetails> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		//may be i need a join
+		return jdbcTemplate.query(
+				"select notificationdetailsid,notificationtypeid,details,status"
+				+ " from notificationdetails",
+				new NotificationDetailsRowMapper());
 	}
 }
 class NotificationDetailsRowMapper implements RowMapper<NotificationDetails>{

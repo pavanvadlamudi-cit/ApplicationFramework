@@ -19,8 +19,15 @@ public class JdbcUserDetailsRepository implements UserDetailsRepository{
 		jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 	public void insert(UserDetails userDetails) {
-		// TODO Auto-generated method stub
-		
+		jdbcTemplate.update("insert into "
+				+ "userdetails"
+				+ "(userdetailsid,  username,  password,  organisationdetailsid,  status) "
+				+ "values (?,?,?,?,?)",
+				userDetails.getUserDetailsID(),
+				userDetails.getUsername(),
+				userDetails.getPassword(),
+				userDetails.getOrganisationDetailsID(),			
+				userDetails.isStatus());		
 	}
 	public void update(UserDetails userDetails) {
 		// TODO Auto-generated method stub
@@ -31,8 +38,12 @@ public class JdbcUserDetailsRepository implements UserDetailsRepository{
 		
 	}
 	public List<UserDetails> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return jdbcTemplate.query(
+				"select "
+				+ "userdetailsid,  username,  password,  organisationdetailsid,  status"
+				+ " from userdetails",
+				new UserDetailsRowMapper());
+		
 	}
 }
 class UserDetailsRowMapper implements RowMapper<UserDetails>{

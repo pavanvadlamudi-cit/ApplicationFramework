@@ -1,6 +1,7 @@
 package ie.cit.afd.dao;
 
 import ie.cit.afd.notification.models.OrganisationDetails;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -19,7 +20,13 @@ public class JdbcOrganisationDetailsRepository implements OrganisationDetailsRep
 		jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 	public void insert(OrganisationDetails organisationDetails) {
-		// TODO Auto-generated method stub
+		jdbcTemplate.update("insert into "
+				+ "organisationdetails"
+				+ "(organisationdetailsid,  name,  status) "
+				+ "values (?,?,?)",
+				organisationDetails.getOrganisationDetailsID(),
+				organisationDetails.getName(),
+				organisationDetails.isStatus());
 		
 	}
 	public void update(OrganisationDetails organisationDetails) {
@@ -31,8 +38,10 @@ public class JdbcOrganisationDetailsRepository implements OrganisationDetailsRep
 		
 	}
 	public List<OrganisationDetails> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return jdbcTemplate.query(
+				"select organisationdetailsid,  name,  status"
+				+ " from organisationdetails",
+				new OrganisationDetailsRowMapper());
 	}
 }
 class OrganisationDetailsRowMapper implements RowMapper<OrganisationDetails>{

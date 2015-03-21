@@ -1,6 +1,8 @@
 package ie.cit.afd.dao;
 
 import ie.cit.afd.notification.models.NotificationTypes;
+
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -19,7 +21,14 @@ public class JdbcNotificationTypesRepository implements NotificationTypesReposit
 		jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 	public void insert(NotificationTypes notificationTypes) {
-		// TODO Auto-generated method stub
+		jdbcTemplate.update("insert into "
+				+ "notificationtypes("
+				+ "notificationtypeid,name,code,status) "
+				+ "values (?,?,?,?)",
+				notificationTypes.getNotificationTypeID(),
+				notificationTypes.getName(),
+				notificationTypes.getCode(),
+				notificationTypes.isStatus());
 		
 	}
 	public void update(NotificationTypes notificationTypes) {
@@ -31,8 +40,11 @@ public class JdbcNotificationTypesRepository implements NotificationTypesReposit
 		
 	}
 	public List<NotificationTypes> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return jdbcTemplate.query(
+				"select notificationtypeid,name,code,status"
+				+ " from notificationtypes",
+				new NotificationTypesRowMapper());
+		
 	}
 }
 class NotificationTypesRowMapper implements RowMapper<NotificationTypes>{
